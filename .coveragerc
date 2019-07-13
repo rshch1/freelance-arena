@@ -1,0 +1,5 @@
+[run]
+include = freelance_arena/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
