@@ -12,5 +12,5 @@ router.register('tasks', TaskViewSet, 'tasks' )
 urlpatterns = [
     path('v1/', include(router.urls)),
     path('auth/login', obtain_jwt_token),
-    path('auth/register', RegisterUsersView.as_view()),
+    path('auth/register', RegisterUsersView.as_view(), name='registration'),
 ]
