@@ -35,6 +35,7 @@ if settings.DEBUG:
         ),
         path("500/", default_views.server_error),
     ]
+    
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
