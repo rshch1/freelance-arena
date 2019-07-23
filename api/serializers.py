@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from freelance_arena.users.models import User
-from task.models import Task
+from .models import Task
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

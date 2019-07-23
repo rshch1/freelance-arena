@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 import math
 from decimal import Decimal
 from django.db.models import F
+from rest_framework.validators import UniqueValidator
 
 
 class User(AbstractUser):

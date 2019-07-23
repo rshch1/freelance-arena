@@ -1,14 +1,16 @@
 from rest_framework.routers import DefaultRouter 
-from . import views
+from .views import ExecutorViewSet, CustomerViewSet, TaskViewSet, RegisterUsersView
 from django.urls import path, include
-from rest_framework_jwt import views as views_jwt
+from rest_framework_jwt.views import obtain_jwt_token
+
+
 router = DefaultRouter()
-router.register('executors', views.ExecutorViewSet, 'executors' )
-router.register('customers', views.CustomerViewSet, 'customers' )
-router.register('tasks', views.TaskViewSet, 'tasks' )
+router.register('executors', ExecutorViewSet, 'executors' )
+router.register('customers', CustomerViewSet, 'customers' )
+router.register('tasks', TaskViewSet, 'tasks' )
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('auth/login', views_jwt.obtain_jwt_token),
-    path('auth/register', views.RegisterUsersView.as_view()),
+    path('auth/login', obtain_jwt_token),
+    path('auth/register', RegisterUsersView.as_view()),
 ]

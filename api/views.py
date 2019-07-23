@@ -1,14 +1,14 @@
 import json
 from rest_framework import viewsets, status
 from freelance_arena.users.models import User
-from task.models import Task
+from .models import Task, TaskExpense
 from .serializers import UserSerializer, TaskSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
-from billing.models import TaskExpense
+from rest_framework import generics, permissions
 from django.db import transaction
 from django.db.transaction import TransactionManagementError
-from rest_framework import generics, permissions
+from .validators import user_validate
 
 
 class ExecutorViewSet(viewsets.ModelViewSet):
@@ -53,29 +53,19 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response(json.dumps({'message': "Taken"}), status=status.HTTP_200_OK)
 
 
-
 class RegisterUsersView(generics.CreateAPIView):
     serializer_class=UserSerializer
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        email = request.data.get("email")
-        user_type = request.data.get("user_type")
-        if not username and not password and not email:
-            return Response(
-                data={
-                    "message": "username, password and email is required to register a user"
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if user_type:
-            new_user = User.objects.create_user(
-                username=username, password=password, email=email, user_type=user_type
-            )
+        user_data = {
+            'username' : request.data.get("username"),
+            'password' : request.data.get("password"),
+            'email' : request.data.get("email"),
+            'user_type' : request.data.get("user_type")
+        }
+        if user_validate(user_data):
+            User.objects.create_user(**user_data)
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            new_user = User.objects.create_user(
-                username=username, password=password, email=email
-            )
-        return Response(status=status.HTTP_201_CREATED)
+            return Response(json.dumps({'message': 'User information is not correct'}), status.HTTP_400_BAD_REQUEST)
