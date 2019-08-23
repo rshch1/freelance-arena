@@ -29,7 +29,7 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"username": self.username})
 
     def update_balance(self, reason, money, **kwargs):
-        from billing.models import MoneyLog
+        from api.models import MoneyLog
         ml_filter = {}
         task = kwargs.get('task', None)
         ml_filter['reason'] = reason
@@ -39,6 +39,8 @@ class User(AbstractUser):
         ml_filter['money'] = money
         ml_filter['task'] = task
         current_balance = User.objects.select_for_update().get(pk=self.pk).balance
+        import time
+        time.sleep(10)
         ml_filter['balance'] = current_balance + Decimal(money)
 
         try:

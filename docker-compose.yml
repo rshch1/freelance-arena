@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/freelance
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - db
+
+  db:
+    image: 'postgres:11.4'
+    volumes:
+      - ./database:/var/lib/postgresql

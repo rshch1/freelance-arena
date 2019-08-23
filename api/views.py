@@ -54,6 +54,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             money=task.money)
 
         if created:
+
             with transaction.atomic():
                 request.user.update_balance(u"Взял задачу", task.money, task=task)
 
